@@ -4,7 +4,7 @@ API gratuíta dos resultados dos jogos da [Loterias Caixa](https://loterias.caix
 ## Exemplos dos retornos
 Atualmente os resultados estão armazenados em um banco de dados noSQL, e podem ser consumidos na url:
 
-https://loteriajogosapi.com/api
+> https://loteriajogosapi.com/api
 ```
 [
   "maismilionaria",
@@ -28,7 +28,7 @@ https://loteriajogosapi.com/api
 
 - Um exemplo de uma consulta realizado para o resultado mais recente da megasena
 
-https://loteriajogosapi.com/api/megasena/recente
+> https://loteriajogosapi.com/api/megasena/recente
 
 ```
 {
@@ -101,4 +101,10 @@ O campo *nomeTimeCoracaoMesSorte* só terá algum valor quando a loteria pesquis
 
 - Para retornar um concurso específico
 > https://loteriajogosapi.com/api/"loteria"/2500
+
+## Para visualizar as operações da API
+
+> https://documenter.getpostman.com/view/29175154/2s9YsKfXXW
+
+![image](https://github.com/sanisamoj/apiLoteria/assets/69211869/f3889dee-3763-45eb-97f0-19d94f25adf6)
 
