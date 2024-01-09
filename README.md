@@ -1,5 +1,5 @@
 ## <p align="center"><b>API do jogos da Loteria da Caixa</b></p>
-API gratuíta dos resultados dos jogos da [Loterias Caixa](https://loterias.caixa.gov.br/Paginas/default.aspx)
+API gratuita dos resultados dos jogos da [Loterias Caixa](https://loterias.caixa.gov.br/Paginas/default.aspx)
 
 ## Exemplos dos retornos
 Atualmente os resultados estão armazenados em um banco de dados noSQL, e podem ser consumidos na url:
