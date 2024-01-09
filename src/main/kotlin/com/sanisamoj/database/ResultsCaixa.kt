@@ -10,7 +10,7 @@ import org.bson.types.ObjectId
 data class ResultsCaixa(
         @BsonId
         @Contextual
-        //@Transient
+        @Transient
         val id_mongo: ObjectId = ObjectId(),
         val tipoJogo: String,
         val numero: Int,
