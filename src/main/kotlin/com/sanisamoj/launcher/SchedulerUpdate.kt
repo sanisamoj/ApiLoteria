@@ -24,8 +24,6 @@ class VerifyIntegrety : Job {
         //Api responsável pela atualização dos resultados
         val apiUrl : String = "https://servicebus2.caixa.gov.br/portaldeloterias/api"
 
-        println("Fui executado! | ${LocalDateTime.now()}")
-
         runBlocking {
             for(game in games) {
                 launcher.veriFyIntegrity(apiUrl, game.toString())
