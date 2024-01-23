@@ -5,7 +5,7 @@ API gratuita dos resultados dos jogos da [Loterias Caixa](https://loterias.caixa
 Atualmente os resultados estão armazenados em um banco de dados noSQL, e podem ser consumidos na url:
 
 > https://loteriajogosapi.com/api
-```
+```array
 [
   "maismilionaria",
   "megasena",
@@ -30,7 +30,7 @@ Atualmente os resultados estão armazenados em um banco de dados noSQL, e podem 
 
 > https://loteriajogosapi.com/api/megasena/recente
 
-```
+```json
 {
     "tipoJogo": "megasena",
     "numero": 2672,
