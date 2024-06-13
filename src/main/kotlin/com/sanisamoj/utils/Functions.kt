@@ -1,20 +1,19 @@
 package com.example.demo.utils
 
-import com.sanisamoj.service.Operations
-import com.sanisamoj.database.ResultsCaixa
-import com.sanisamoj.database.enums.Games
-import com.sanisamoj.launcher.Launcher
+import com.sanisamoj.models.generics.ResultsCaixa
+import com.sanisamoj.models.enums.Games
+import com.sanisamoj.service.ResultService
 
-//Responsável por auxiliar a verificação do parâmentro do GET como latest ou número
+// Responsável por auxiliar a verificação do parâmentro do GET como latest ou número
 suspend fun findConc(loteria: String, id: String): ResultsCaixa? {
     return if (id == "latest" || id == "ultimo" || id == "recente") {
-        Operations().getLastest(loteria)
+        ResultService().returnLatest(loteria)
     } else {
-        Operations().getByConc(loteria, id.toInt())
+        ResultService().returnByConc(loteria, id.toInt())
     }
 }
 
-//Responsável por auxilizar a função de integridade, verificando os números faltantes de uma array
+// Responsável por auxilizar a função de integridade, verificando os números faltantes de uma array
 fun findMissingNumber(originArray : List<Int>, maxNumber: Int) : List<Int> {
 
     //Armazena a lista de números faltantes
@@ -28,18 +27,7 @@ fun findMissingNumber(originArray : List<Int>, maxNumber: Int) : List<Int> {
 
 }
 
-//Responsável por registrar os resultados na db
-suspend fun registerResults(apiUrl: String, games: Array<Games>, drawType: String) {
-
-    //Percorre a lista de jogos da loteria e registra
-    for(game in games) {
-        //Instancializa o launcher e registrar todos os resultados
-        Launcher().registerAllResults(apiUrl, game.toString(), drawType)
-
-    }
-}
-
-//Responsável por transformar em uma array de ‘string’ os valores do enum Games
+// Responsável por transformar em uma array de ‘string’ os valores do enum Games
 fun converterGamesInArray() : List<String> {
 
     //Lista de jogos para iterar na Api

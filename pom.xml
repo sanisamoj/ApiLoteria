@@ -95,13 +95,6 @@
             <version>4.10.1</version>
         </dependency>
 
-        <!-- Okhttp - RequestAPi -->
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.12.0</version>
-        </dependency>
-
         <!-- Converter JSon -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -151,6 +144,41 @@
             <artifactId>ktor-server-cors-jvm</artifactId>
             <version>2.3.7</version>
             <scope>implementation</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit -->
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>retrofit</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson -->
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-gson</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+
+        <!--rate-limit-->
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-rate-limit-jvm</artifactId>
+            <version>${ktor_version}</version>
+        </dependency>
+
+        <!--Status page-->
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-status-pages-jvm</artifactId>
+            <version>${ktor_version}</version>
+        </dependency>
+
+        <!-- Ktor HTML Builder -->
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-html-jvm</artifactId>
+            <version>0.8.0</version>
         </dependency>
 
     </dependencies>
