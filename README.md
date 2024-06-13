@@ -5,6 +5,7 @@ API gratuita dos resultados dos jogos da [Loterias Caixa](https://loterias.caixa
 Atualmente os resultados estão armazenados em um banco de dados noSQL, e podem ser consumidos na url:
 
 > https://loteriajogosapi.com
+
 > https://loteriajogosapi.com/api
 ```array
 [
