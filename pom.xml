@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.sanisamoj</groupId>
     <artifactId>apiloteria</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <name>apiLoteria</name>
     <description>apiLoteria</description>
     <properties>
@@ -142,8 +142,7 @@
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-cors-jvm</artifactId>
-            <version>2.3.7</version>
-            <scope>implementation</scope>
+            <version>${ktor_version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit -->
@@ -195,7 +194,7 @@
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <groupId>org.jetbrains.kotlin</groupId>
-                <version>${kotlin_version}</version>
+                <version>1.9.22</version>
                 <configuration>
                     <jvmTarget>1.8</jvmTarget>
                 </configuration>
@@ -255,32 +254,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-maven-plugin</artifactId>
-                <version>1.9.22</version>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <compilerPlugins>
-                        <plugin>kotlinx-serialization</plugin>
-                    </compilerPlugins>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-serialization</artifactId>
-                        <version>${kotlin_version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>

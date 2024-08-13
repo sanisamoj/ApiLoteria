@@ -1,22 +1,22 @@
 package com.sanisamoj.service
 
-import com.example.demo.utils.findMissingNumber
-import com.sanisamoj.GlobalContext
-import com.sanisamoj.external.LoteriaApi
-import com.sanisamoj.models.enums.Games
-import com.sanisamoj.models.generics.ResultsCaixa
-import com.sanisamoj.models.interfaces.CaixaRepository
-import com.sanisamoj.models.interfaces.LoteriaRepository
+import com.sanisamoj.utils.analyzers.findMissingNumber
+import com.sanisamoj.config.GlobalContext
+import com.sanisamoj.data.models.dataclass.ResultsApiResponse
+import com.sanisamoj.data.models.enums.Games
+import com.sanisamoj.data.models.interfaces.CaixaRepository
+import com.sanisamoj.data.models.interfaces.DatabaseRepository
+import com.sanisamoj.api.LoteriaApi
 import retrofit2.HttpException
 
 class UpdateResultService(
-    private val loteriaRepository: LoteriaRepository = GlobalContext.LoteriaRepository,
-    private val caixaRepository: CaixaRepository = GlobalContext.caixaRepository
+    private val databaseRepository: DatabaseRepository = GlobalContext.databaseRepository,
+    private val apiRepository: CaixaRepository = GlobalContext.apiRepository
 ) {
     @OptIn(ExperimentalStdlibApi::class)
     suspend fun verifyAllResultsAndUpdate() {
         val games : Array<Games> = Games.entries.toTypedArray()
-        games.forEach { it ->
+        games.forEach {
             val missingNumbers = getMissingResultsNumber(it.name)
             updateMissingResults(it.name, missingNumbers)
         }
@@ -26,8 +26,8 @@ class UpdateResultService(
         val numbers = missingNumbers ?: getMissingResultsNumber(loteria)
         numbers.forEach { missingNumber ->
             try {
-                val result: ResultsCaixa = LoteriaApi.retrofitService.getGameResult(loteria, missingNumber.toString())
-                loteriaRepository.register(result)
+                val result: ResultsApiResponse = LoteriaApi.retrofitService.getGameResult(loteria, missingNumber.toString())
+                databaseRepository.register(result)
                 println("Número $missingNumber foi registrado / $loteria ")
 
             } catch (e: HttpException) {
@@ -37,21 +37,18 @@ class UpdateResultService(
         }
     }
 
-    // Verifica quais jogos não estão registrados e salvá-os
     private suspend fun getMissingResultsNumber(game: String): List<Int> {
-        val allResults: List<ResultsCaixa> = loteriaRepository.getAllResults(game).toList()
+        val allResults: List<ResultsApiResponse> = databaseRepository.getAllResults(game).toList()
         val allGamesNumbers: List<Int> = allResults.map { it.numero }
 
-        // Armazena o número do último sorteio atualizado
         val lastConc: Int
 
         try {
-            lastConc = caixaRepository.getLatestResult(game).numero
+            lastConc = apiRepository.getLatestResult(game).numero
         } catch (e: Exception) {
             throw Exception("Last game is null error")
         }
 
-        // Armazena a array com os números faltantes
         val missingNumbers: List<Int> = findMissingNumber(allGamesNumbers, lastConc)
         return missingNumbers
     }

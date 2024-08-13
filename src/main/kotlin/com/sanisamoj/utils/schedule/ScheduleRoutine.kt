@@ -14,28 +14,30 @@ class ScheduleRoutine {
             private set
     }
 
-    inline fun <reified T : Job>startRoutine(startRoutineData: StartRoutineData): JobKey {
-        
+    inline fun <reified T : Job> startRoutine(startRoutineData: StartRoutineData): JobKey {
         scheduler.start()
 
         val job = JobBuilder.newJob(T::class.java)
             .withIdentity(startRoutineData.name, startRoutineData.group.name)
             .build()
 
-        val trigger = TriggerBuilder.newTrigger()
+        val triggerBuilder = TriggerBuilder.newTrigger()
             .withIdentity(startRoutineData.name, startRoutineData.group.name)
             .startNow()
-            .withSchedule(
-                if(startRoutineData.repeatForever) {
-                    SimpleScheduleBuilder.simpleSchedule()
-                        .withIntervalInMilliseconds(startRoutineData.interval)
-                        .repeatForever()
-                } else {
-                    SimpleScheduleBuilder.simpleSchedule()
-                        .withIntervalInMilliseconds(startRoutineData.interval)
+
+        val scheduleBuilder = if (startRoutineData.cronExpression != null) {
+            CronScheduleBuilder.cronSchedule(startRoutineData.cronExpression)
+        } else {
+            SimpleScheduleBuilder.simpleSchedule()
+                .withIntervalInMilliseconds(startRoutineData.interval)
+                .apply {
+                    if (startRoutineData.repeatForever) {
+                        this.repeatForever()
+                    }
                 }
-            )
-            .build()
+        }
+
+        val trigger = triggerBuilder.withSchedule(scheduleBuilder).build()
 
         scheduler.scheduleJob(job, trigger)
         val jobIdentification = JobIdentification(job.key, startRoutineData.description)

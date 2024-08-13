@@ -1,6 +1,8 @@
 ## API do jogos da Loteria da Caixa
 API gratuita dos resultados dos jogos da [Loteria Caixa](https://loterias.caixa.gov.br/Paginas/default.aspx)
 
+Esta API tem como objetivo apenas armazenas os valores sorteados dos jogos da Loteria Federal, e será utilizado apenas para consultas.
+
 ## Funcionalidades do Sistema
 
 - Retornar resultados dos jogos da Lotérica Federal
@@ -112,6 +114,27 @@ Atualmente os resultados estão armazenados em um banco de dados noSQL, e podem 
 
 - Para retornar um concurso específico
 > https://loteriajogosapi.com/api/"loteria"/2500
+
+## Para instalação
+Para instalar o projeto para testes, utilizaremos o Docker.
+
+- Instale a última versão do **Docker** em sua máquina.
+- Instale o **Mongodb** (Verifique na página oficial, ou monte uma imagem com o Docker).
+- Crie um arquivo **.env** na pasta raiz do projeto, ou adicione um arquivo **.env** manualmente na construção da imagem docker.
+
+```.env
+#Database
+SERVER_URL=
+NAME_DATABASE=
+```
+
+#### Execute o comando a seguir para construir a imagem Docker.
+
+    docker build -t api_loteria:latest .
+
+#### Execute o comando a seguir para executar a imagem criada com o Docker.
+
+    docker run --name api_loteria -p 8080:8080 api_loteria:latest
 
 ## Para visualizar as operações da API
 

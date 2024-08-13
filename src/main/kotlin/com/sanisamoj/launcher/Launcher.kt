@@ -1,70 +1,58 @@
 package com.sanisamoj.launcher
 
-import com.example.demo.utils.findMissingNumber
-import com.sanisamoj.database.ResultsCaixa
-import com.sanisamoj.external.ApiRequest
-import com.sanisamoj.service.Operations
+import com.sanisamoj.config.GlobalContext
+import com.sanisamoj.data.models.dataclass.ResultsApiResponse
+import com.sanisamoj.data.models.interfaces.DatabaseRepository
+import com.sanisamoj.data.repository.ApiRepository
+import com.sanisamoj.utils.analyzers.findMissingNumber
 
-//@Component
-class Launcher {
+class Launcher(
+    private val apiRepository: ApiRepository = GlobalContext.apiRepository,
+    private val databaseRepository: DatabaseRepository = GlobalContext.databaseRepository
+) {
 
-    //Busca o último sorteio da loteria, e vai registrar todos
-    suspend fun registerAllResults(apiUrl: String, loteria: String, lastConc: String) {
+    companion object {
+        private val failedResults = mutableMapOf<String, MutableSet<Int>>()
+    }
 
-        //Instancializa o objeto da apiRequest
-        val apiRequest: ApiRequest = ApiRequest()
-
-        //Instancializa o objeto das operações
-        val operation: Operations = Operations()
-
-        //Retorna o valor do último sorteio
-        val lastestConc: Int? = apiRequest.get<ResultsCaixa>("$apiUrl/$loteria/$lastConc")?.numero
-
-        //Caso não seja nulo percorre entre todos os resultados
+    // Search for the latest lottery draw and record all
+    suspend fun registerAllResults(loteria: String) {
+        val lastestConc: Int? = apiRepository.getLatestResult(loteria).numero
         lastestConc?.let {
             for (conc in lastestConc downTo 1) {
-
-                //Requisita o resultado de uma loteria
-                val result: ResultsCaixa? = apiRequest.get<ResultsCaixa>("$apiUrl/$loteria/$conc")
-
+                val result: ResultsApiResponse? = apiRepository.getResult(loteria, conc)
                 result?.let {
-                    operation.addItem(result = result)
+                    databaseRepository.register(result)
                 }
-
             }
         }
     }
 
-    //Verifica quais jogos não estão registrados e salvá-os
-    suspend fun veriFyIntegrity(apiUrl: String, game: String): Unit {
-
-        //Instancializa o serviço operações
-        val operations = Operations()
-
-        //Armazena uma lista de todos os resultados do banco de dados
-        val allMyConc: List<ResultsCaixa> = operations.getAll(game).toList()
-
-        //Variável que irá armazenar todos os números dos jogos do banco de dados
+    // Check which games are not registered and save them
+    suspend fun verifyIntegrity(loteria: String): Unit {
+        println("$loteria is being updated")
+        val allMyConc: List<ResultsApiResponse> = databaseRepository.getAllResults(loteria).toList()
         val allGamesNumbers: MutableList<Int> = mutableListOf<Int>()
-
-        //Adiciona todos os números dos concursos que estão registrados no banco de dados
         for(index in allMyConc.indices) {
             allGamesNumbers.add(allMyConc[index].numero)
         }
 
-        //Instancializa a API_REQUEST
-        val apiRequest = ApiRequest()
+        val lastestConc: Int? = apiRepository.getLatestResult(loteria).numero
+        val missingNumbers: List<Int> = findMissingNumber(allGamesNumbers, lastestConc!!)
+        println("Missing $loteria numbers - $missingNumbers")
 
-        //Armazena o número do último sorteio atualizado
-        val lastConc: Int? = apiRequest.get<ResultsCaixa>("$apiUrl/$game")?.numero
-
-        //Armazena a array com os números faltantes
-        val missingNumbers: List<Int> = findMissingNumber(allGamesNumbers, lastConc!!)
-
-        //Percorre os números faltarantes realizando a requisição
         missingNumbers.forEach { missingNumber ->
-            val result: ResultsCaixa? = apiRequest.get<ResultsCaixa>("$apiUrl/$game/$missingNumber")
-            operations.addItem(result)
+            if (failedResults[loteria]?.contains(missingNumber) == true) {
+                println("Skipping previously failed number $missingNumber for $loteria")
+                return@forEach
+            }
+            try {
+                val result: ResultsApiResponse = apiRepository.getResult(loteria, missingNumber)
+                databaseRepository.register(result)
+            } catch (ex: Throwable) {
+                println("$missingNumber for $loteria has not been updated")
+                failedResults.computeIfAbsent(loteria) { mutableSetOf() }.add(missingNumber)
+            }
         }
 
     }
