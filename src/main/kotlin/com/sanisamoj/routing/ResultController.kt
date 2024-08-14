@@ -41,6 +41,7 @@ fun Route.resultRouting() {
                 }
 
             } catch (e : Throwable) {
+                println(e.message)
                 call.respond(HttpStatusCode.InternalServerError, "Erro interno do servidor.")
             }
         }
