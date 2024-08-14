@@ -26,7 +26,7 @@ object Config {
         val startRoutineData = StartRoutineData(
             name = routineName,
             group = RoutineGroups.ResultsUpdate,
-            cronExpression = GlobalContext.ONCE_A_MONTH_CRON
+            cronExpression = GlobalContext.EVERY_DAY_AT_10_PM_CRON
         )
 
         val jobKey: JobKey = ScheduleRoutine().startRoutine<VerifyIntegrity>(startRoutineData)

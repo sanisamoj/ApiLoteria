@@ -7,5 +7,6 @@ object GlobalContext {
     val apiRepository by lazy { ApiRepository() }
     val databaseRepository by lazy { DatabaseDefaultRepository() }
 
-    const val ONCE_A_MONTH_CRON: String = "0 0 0 1 * ?"
+    const val EVERY_DAY_AT_10_PM_CRON: String = "0 0 22 * * ?"
+
 }
